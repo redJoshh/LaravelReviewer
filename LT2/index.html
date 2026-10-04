@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LT 2 Reviewers</title>
+    <style>
+      :root {
+        --bg: #f6f5f2;
+        --card: #fff;
+        --tx: #1d1d1f;
+        --mu: #6b6b70;
+        --bd: #e0ded8;
+        --ac: #e0452b;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #18181a;
+          --card: #222225;
+          --tx: #ececee;
+          --mu: #9a9aa2;
+          --bd: #38383d;
+          --ac: #ff6a4f;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          16px/1.5 system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+      .w {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 32px 16px;
+      }
+      .back {
+        color: var(--ac);
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+      h1 {
+        font-size: 1.9rem;
+        margin: 8px 0 4px;
+      }
+      .sub {
+        color: var(--mu);
+        margin: 0 0 20px;
+      }
+      .g {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 14px;
+      }
+      a.c,
+      .c.soon {
+        display: block;
+        background: var(--card);
+        border: 1px solid var(--bd);
+        border-radius: 14px;
+        padding: 18px;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          transform 0.15s,
+          border-color 0.15s;
+      }
+      a.c:hover {
+        transform: translateY(-3px);
+        border-color: var(--ac);
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--ac);
+        border: 1px solid var(--ac);
+        border-radius: 6px;
+        padding: 1px 8px;
+        margin-bottom: 8px;
+      }
+      .c h2 {
+        font-size: 1.1rem;
+        margin: 0 0 4px;
+      }
+      .c p {
+        margin: 0;
+        color: var(--mu);
+        font-size: 0.9rem;
+      }
+      .go {
+        display: block;
+        margin-top: 12px;
+        color: var(--ac);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .soon {
+        opacity: 0.55;
+        border-style: dashed !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="w">
+      <a class="back" href="../">&larr; Back to dashboard</a>
+      <h1>LT 2 Reviewers</h1>
+      <p class="sub">Choose a topic.</p>
+      <div class="g" id="g"></div>
+    </div>
+    <script>
+      /* Each topic lives in its own subfolder: LT2/<folder>/index.html
+   Set live:false to show "Coming soon". */
+      const TOPICS = [
+        {
+          folder: "eloquent-orm",
+          tag: "Topic 1",
+          title: "Database Integration, Migrations, Models & Eloquent ORM",
+          desc: "25 questions: fill in the blanks, multiple choice, and code tracing.",
+          live: true,
+        },
+        {
+          folder: "topic-2",
+          tag: "Topic 2",
+          title: "Topic 2 title here",
+          desc: "Description here.",
+          live: false,
+        },
+      ];
+      const g = document.getElementById("g");
+      TOPICS.forEach((x) => {
+        const c = document.createElement(x.live ? "a" : "div");
+        c.className = "c" + (x.live ? "" : " soon");
+        if (x.live) c.href = x.folder + "/";
+        const t = document.createElement("span");
+        t.className = "tag";
+        t.textContent = x.tag;
+        const h = document.createElement("h2");
+        h.textContent = x.title;
+        const p = document.createElement("p");
+        p.textContent = x.desc;
+        const go = document.createElement("span");
+        go.className = "go";
+        go.textContent = x.live ? "Start reviewing \u2192" : "Coming soon";
+        c.append(t, h, p, go);
+        g.appendChild(c);
+      });
+    </script>
+  </body>
+</html>

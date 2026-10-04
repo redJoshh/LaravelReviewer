@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Form Validation Reviewer</title>
+    <style>
+      :root {
+        --bg: #f6f5f2;
+        --card: #fff;
+        --tx: #1d1d1f;
+        --mu: #6b6b70;
+        --bd: #e0ded8;
+        --ac: #e0452b;
+        --ok: #1a7f4b;
+        --okb: #e3f4ea;
+        --no: #c0302a;
+        --nob: #fbe7e5;
+        --cb: #f0eee9;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #18181a;
+          --card: #222225;
+          --tx: #ececee;
+          --mu: #9a9aa2;
+          --bd: #38383d;
+          --ac: #ff6a4f;
+          --ok: #5fd18f;
+          --okb: #17301f;
+          --no: #ff8b84;
+          --nob: #3a1d1b;
+          --cb: #17171a;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #18181a;
+        --card: #222225;
+        --tx: #ececee;
+        --mu: #9a9aa2;
+        --bd: #38383d;
+        --ac: #ff6a4f;
+        --ok: #5fd18f;
+        --okb: #17301f;
+        --no: #ff8b84;
+        --nob: #3a1d1b;
+        --cb: #17171a;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          16px/1.5 system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+      .w {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin: 8px 0 2px;
+      }
+      .sub {
+        color: var(--mu);
+        margin: 0 0 12px;
+      }
+      .bar {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        background: var(--bg);
+        padding: 8px 0;
+        z-index: 5;
+      }
+      .pr {
+        height: 8px;
+        background: var(--bd);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .pr i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--ac);
+        transition: width 0.3s;
+      }
+      .st {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: var(--mu);
+        margin-top: 4px;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin: 22px 0 8px;
+        color: var(--ac);
+      }
+      .c {
+        background: var(--card);
+        border: 1px solid var(--bd);
+        border-radius: 12px;
+        padding: 14px;
+        margin: 0 0 12px;
+      }
+      .c.ok {
+        border-color: var(--ok);
+      }
+      .c.no {
+        border-color: var(--no);
+      }
+      .n {
+        font-weight: 700;
+        color: var(--mu);
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+      }
+      .q {
+        margin: 0 0 8px;
+        overflow-wrap: anywhere;
+      }
+      pre {
+        background: var(--cb);
+        border: 1px solid var(--bd);
+        border-radius: 8px;
+        padding: 10px;
+        overflow-x: auto;
+        font-size: 0.82rem;
+        margin: 0 0 10px;
+        max-width: 100%;
+      }
+      input[type="text"] {
+        font: inherit;
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 0.9rem;
+        width: 11em;
+        max-width: 100%;
+        padding: 3px 8px;
+        margin: 2px 3px;
+        border: 1px solid var(--bd);
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--tx);
+      }
+      input.ok {
+        border-color: var(--ok);
+        background: var(--okb);
+      }
+      input.no {
+        border-color: var(--no);
+        background: var(--nob);
+      }
+      label.o {
+        display: block;
+        padding: 8px 10px;
+        margin: 5px 0;
+        border: 1px solid var(--bd);
+        border-radius: 8px;
+        cursor: pointer;
+        overflow-wrap: anywhere;
+      }
+      label.o.ok {
+        border-color: var(--ok);
+        background: var(--okb);
+      }
+      label.o.no {
+        border-color: var(--no);
+        background: var(--nob);
+      }
+      label.o input {
+        margin-right: 8px;
+      }
+      button {
+        font: inherit;
+        font-size: 0.9rem;
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--bd);
+        background: var(--card);
+        color: var(--tx);
+        cursor: pointer;
+        margin: 8px 8px 0 0;
+      }
+      button.p {
+        background: var(--ac);
+        border-color: var(--ac);
+        color: #fff;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .f {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.92rem;
+        display: none;
+      }
+      .f.ok {
+        display: block;
+        background: var(--okb);
+        color: var(--ok);
+      }
+      .f.no {
+        display: block;
+        background: var(--nob);
+        color: var(--no);
+      }
+      .f b {
+        display: block;
+      }
+      .f span {
+        color: var(--tx);
+      }
+      .res {
+        display: none;
+        text-align: center;
+        padding: 18px;
+        border: 2px solid var(--ac);
+        border-radius: 12px;
+        background: var(--card);
+        margin: 16px 0;
+      }
+      .res h3 {
+        margin: 0 0 4px;
+        font-size: 1.3rem;
+      }
+      code {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 0.88em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="w">
+      <a
+        href="../"
+        style="color: var(--ac); text-decoration: none; font-size: 0.9rem"
+        >&larr; Back to LT 2 topics</a
+      >
+      <h1>Form Validation Reviewer</h1>
+      <p class="sub">
+        Laravel form processing &amp; validation. 25 questions. Fill in the
+        blanks, multiple choice, and code tracing.
+      </p>
+      <div class="bar">
+        <div class="pr"><i id="pb"></i></div>
+        <div class="st">
+          <span id="a">Answered 0/25</span><span id="s">Score 0</span>
+        </div>
+      </div>
+      <div id="qs"></div>
+      <div class="res" id="res">
+        <h3 id="rt"></h3>
+        <p id="rm"></p>
+        <button class="p" onclick="init()">Try again</button>
+      </div>
+    </div>
+    <script>
+      const Q = [
+        {
+          p: "A",
+          q: "Validate with $request->___(). On failure Laravel throws ___, and JSON/API requests receive HTTP ___.",
+          b: [
+            ["validate"],
+            [
+              "validationexception",
+              "illuminate\\validation\\validationexception",
+            ],
+            ["422"],
+          ],
+          s: "validate, ValidationException, 422",
+          e: "validate() throws ValidationException on failure. Web requests get a redirect back; API/JSON requests get a 422 Unprocessable Entity response.",
+        },
+        {
+          p: "A",
+          q: "After failed validation, Blade repopulates an input using the helper ___('name').",
+          b: [["old"]],
+          s: "old",
+          e: "old('name') reads the input that Laravel flashed to the session.",
+        },
+        {
+          p: "A",
+          q: "The ___ directive generates a hidden input named ___. Omitting it causes HTTP ___ Page Expired.",
+          b: [["csrf"], ["_token"], ["419"]],
+          s: "@csrf, _token, 419",
+          e: '@csrf outputs <input type="hidden" name="_token">, which the VerifyCsrfToken middleware checks.',
+        },
+        {
+          p: "A",
+          q: "Validation errors are available in views as the $___ variable (a MessageBag). Check for any errors with $errors->___().",
+          b: [["errors"], ["any"]],
+          s: "$errors, any",
+          e: "$errors->any() checks for errors; $errors->all() returns every message.",
+        },
+        {
+          p: "A",
+          q: "Show the error for one field using @___('description') ... @___.",
+          b: [["error"], ["enderror"]],
+          s: "@error, @enderror",
+          e: "Inside the block, $message holds that field's error text.",
+        },
+        {
+          p: "A",
+          q: "To stop evaluating the remaining rules of an attribute after its first failure, put the ___ rule first.",
+          b: [["bail"]],
+          s: "bail",
+          e: "Example: 'bail|required|min:5|unique:products' skips the unique DB query if min:5 fails.",
+        },
+        {
+          p: "A",
+          q: "Publish the language files with php artisan ___. The default messages are then in lang/en/___.php.",
+          b: [["lang:publish"], ["validation"]],
+          s: "lang:publish, validation",
+          e: "Editing lang/en/validation.php changes messages application-wide.",
+        },
+        {
+          p: "A",
+          q: "Generate a Form Request with php artisan make:___ CustomFormRequest. It has ___() for authorization and ___() for the validation rules.",
+          b: [["request"], ["authorize"], ["rules"]],
+          s: "request, authorize, rules",
+          e: "Form Requests move validation out of the controller (Single Responsibility Principle).",
+        },
+        {
+          p: "A",
+          q: "To get a 404 instead of null when a record is missing, use Product::___($id). It throws ___.",
+          b: [
+            ["findorfail"],
+            [
+              "modelnotfoundexception",
+              "illuminate\\database\\eloquent\\modelnotfoundexception",
+            ],
+          ],
+          s: "findOrFail, ModelNotFoundException",
+          e: 'find() returns null, which later causes "Call to a member function update() on null".',
+        },
+        {
+          p: "A",
+          q: "Mass assignment is allowed only for attributes in the protected $___ array; with none defined, create($request->all()) throws ___.",
+          b: [
+            ["fillable"],
+            [
+              "massassignmentexception",
+              "illuminate\\database\\eloquent\\massassignmentexception",
+            ],
+          ],
+          s: "$fillable, MassAssignmentException",
+          e: "$fillable is an allow-list of columns safe for mass assignment.",
+        },
+        {
+          p: "B",
+          q: "Why is server-side validation mandatory even if you already validate in JavaScript?",
+          o: [
+            "JavaScript is slower than PHP",
+            "Client-side checks can be bypassed with tools like Postman or cURL",
+            "Browsers do not support HTML5 validation",
+            "Laravel disables JavaScript forms",
+          ],
+          a: 1,
+          e: "The browser is an untrusted environment. Client-side checks are UX only; server-side validation is the real security layer.",
+        },
+        {
+          p: "B",
+          q: "By default (without bail), what happens when the first rule of an attribute fails?",
+          o: [
+            "Validation stops immediately",
+            "Laravel keeps evaluating the remaining rules for that attribute",
+            "The whole form is skipped",
+            "The failure is ignored",
+          ],
+          a: 1,
+          e: "All rules are evaluated unless bail is used.",
+        },
+        {
+          p: "B",
+          q: "When is array syntax preferred over the string pipe syntax?",
+          o: [
+            "When rules are very short",
+            "When using custom rule objects, closures, or expressions containing pipe characters",
+            "Only for GET requests",
+            "Never, they behave differently",
+          ],
+          a: 1,
+          e: "String syntax ('required|min:3') is fine for simple lists.",
+        },
+        {
+          p: "B",
+          q: "Which key customizes the message for the required rule on the name field?",
+          o: [
+            "'name.required' => '...'",
+            "'required.name' => '...'",
+            "'name->required' => '...'",
+            "'required' => '...' only",
+          ],
+          a: 0,
+          e: "Keys use dot notation: 'field.rule' => 'Custom message'.",
+        },
+        {
+          p: "B",
+          q: "Inside @error('description') ... @enderror, what does $message contain?",
+          o: [
+            "All errors on the form",
+            "The error message for the description field",
+            "The old input value",
+            "The HTTP status code",
+          ],
+          a: 1,
+          e: "$message is automatically scoped to that field's error.",
+        },
+        {
+          p: "B",
+          q: 'An input has id="product_name" but no name attribute. The controller requires product_name. What happens?',
+          o: [
+            "It passes, Laravel reads the id",
+            "It always fails, because the browser sends no product_name key",
+            "HTTP 419",
+            "MassAssignmentException",
+          ],
+          a: 1,
+          e: "Browsers key the POST payload by the name attribute, not id.",
+        },
+        {
+          p: "B",
+          q: "When validation passes, what does $request->validate() return?",
+          o: [
+            "true",
+            "A redirect response",
+            "An array of only the validated fields",
+            "The Product model",
+          ],
+          a: 2,
+          e: "Unvetted payload keys are filtered out.",
+        },
+        {
+          p: "B",
+          q: "For a standard web request that fails validation, what does Laravel do?",
+          o: [
+            "Returns a 422 JSON response",
+            "Redirects (HTTP 302) back with errors in $errors and flashed old input",
+            "Shows a 500 error",
+            "Continues running the controller",
+          ],
+          a: 1,
+          e: "JSON/API requests get 422 instead of a redirect.",
+        },
+        {
+          p: "B",
+          q: "Why is findOrFail($id) preferred over find($id) in update actions?",
+          o: [
+            "It is faster",
+            "It throws ModelNotFoundException, giving a clean 404 instead of a null error",
+            "It skips validation",
+            "It enables soft deletes",
+          ],
+          a: 1,
+          e: "find() returns null on a miss and crashes when you call update().",
+        },
+        {
+          p: "B",
+          q: "How do inline messages (2nd argument of validate()) differ from lang/en/validation.php?",
+          o: [
+            "They are identical in scope",
+            "Inline applies only to that action; the lang file changes messages application-wide",
+            "Inline is application-wide; the lang file is per action",
+            "Inline only works for JSON requests",
+          ],
+          a: 1,
+          e: "Inline = one controller action. lang file = every form in the app.",
+        },
+        {
+          p: "C",
+          q: 'The client submits "Hello" as title. Which rule fails, and is max:20 evaluated?',
+          c: "$request->validate([\n    'title' => 'bail|required|min:10|max:20'\n]);",
+          o: [
+            "min:10 fails; max:20 is NOT evaluated",
+            "min:10 fails; max:20 is also evaluated",
+            "max:20 fails; min:10 is skipped",
+            "required fails",
+          ],
+          a: 0,
+          e: '"Hello" has 5 characters, so min:10 fails. bail stops evaluation right after the first failure.',
+        },
+        {
+          p: "C",
+          q: 'The client submits "Hello" (5 characters). How many error messages does title produce?',
+          c: "$request->validate([\n    'title' => 'required|min:10|max:3'\n]);",
+          o: ["0", "1 (min:10 only)", "2 (min:10 and max:3)", "3"],
+          a: 2,
+          e: "Without bail, every rule is evaluated: min:10 fails and max:3 fails. With bail it would be 1.",
+        },
+        {
+          p: "C",
+          q: "A user enters a valid name and submits. What happens?",
+          c: '<form action="{{ route(\'products.store\') }}" method="POST">\n    <input type="text" name="name">\n    <button type="submit">Save</button>\n</form>\n\n// Controller\n$request->validate([\'name\' => \'required\']);',
+          o: [
+            "The product is saved",
+            "A ValidationException is thrown",
+            "HTTP 419 Page Expired, before the controller runs",
+            "HTTP 404 Not Found",
+          ],
+          a: 2,
+          e: "There is no @csrf, so the VerifyCsrfToken middleware rejects the request before validate() is reached.",
+        },
+        {
+          p: "C",
+          q: 'name = "Lamp", description = "A very nice lamp for sale today" (31 characters), plus a hidden extra field is_admin=1. What happens?',
+          c: "$data = $request->validate([\n    'name' => 'required|max:255',\n    'description' => 'required|min:10|max:20',\n]);\n$data['user_id'] = Auth::id();\nProduct::create($data);",
+          o: [
+            "Product created with the 31-character description",
+            "Redirected back (302) with a max:20 error on description; nothing is saved",
+            "Product created with is_admin = 1",
+            "422 JSON response",
+          ],
+          a: 1,
+          e: "31 > 20, so max:20 fails. The controller halts and redirects back with $errors and old input. Extra fields never get through validate().",
+        },
+        {
+          p: "C",
+          q: 'Editing product #7 (name currently "Lamp"). The user submits the same name "Lamp". What is the result for name?',
+          c: "'name' => 'required|max:255|unique:products,name,' . $product->id",
+          o: [
+            "Fails: the name has already been taken",
+            "Passes, because unique ignores the row with id 7",
+            "Fails: required",
+            "Passes only if bail is added",
+          ],
+          a: 1,
+          e: "The appended id tells unique to ignore the current record. Without it, an unchanged name would falsely fail as a duplicate.",
+        },
+      ];
+      const R = [];
+      const norm = (s) =>
+        s
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/phpartisan/g, "")
+          .replace("$table->", "")
+          .replace(/\(\)/g, "")
+          .replace(/^[-$@]+/, "")
+          .replace(/\/$/, "")
+          .replace(/;$/, "");
+      function el(t, c, x) {
+        const e = document.createElement(t);
+        if (c) e.className = c;
+        if (x != null) e.textContent = x;
+        return e;
+      }
+      function init() {
+        R.length = 0;
+        const root = document.getElementById("qs");
+        root.innerHTML = "";
+        document.getElementById("res").style.display = "none";
+        const titles = {
+          A: "Part A: Fill in the Blanks",
+          B: "Part B: Multiple Choice",
+          C: "Part C: Code Tracing & Syntax",
+        };
+        let last = "";
+        Q.forEach((q, i) => {
+          if (q.p !== last) {
+            last = q.p;
+            root.appendChild(el("h2", "", titles[q.p]));
+          }
+          const card = el("div", "c");
+          card.id = "q" + i;
+          card.appendChild(el("div", "n", "QUESTION " + (i + 1)));
+          const qp = el("p", "q");
+          if (q.b) {
+            q.q.split("___").forEach((t, k) => {
+              qp.appendChild(document.createTextNode(t));
+              if (k < q.b.length) {
+                const inp = el("input");
+                inp.type = "text";
+                inp.autocomplete = "off";
+                inp.autocapitalize = "off";
+                inp.spellcheck = false;
+                inp.dataset.k = k;
+                inp.onkeydown = (e) => {
+                  if (e.key === "Enter") chk(i);
+                };
+                qp.appendChild(inp);
+              }
+            });
+          } else qp.textContent = q.q;
+          card.appendChild(qp);
+          if (q.c) {
+            const pre = el("pre");
+            const cd = el("code", "", q.c);
+            if (q.b) {
+              cd.textContent = "";
+              q.c.split("___").forEach((t, k) => {
+                cd.appendChild(document.createTextNode(t));
+                if (k < q.b.length) cd.appendChild(el("b", "", "_____"));
+              });
+            }
+            pre.appendChild(cd);
+            card.insertBefore(pre, qp.nextSibling);
+          }
+          if (q.o) {
+            q.o.forEach((o, k) => {
+              const l = el("label", "o");
+              const r = el("input");
+              r.type = "radio";
+              r.name = "r" + i;
+              r.value = k;
+              l.appendChild(r);
+              l.appendChild(
+                document.createTextNode(String.fromCharCode(65 + k) + ". " + o),
+              );
+              card.appendChild(l);
+            });
+          }
+          const b1 = el("button", "p", "Check");
+          b1.onclick = () => chk(i);
+          const b2 = el("button", "", "Show answer");
+          b2.onclick = () => rev(i);
+          card.appendChild(b1);
+          card.appendChild(b2);
+          const f = el("div", "f");
+          f.id = "f" + i;
+          card.appendChild(f);
+          root.appendChild(card);
+        });
+        upd();
+      }
+      function lock(i) {
+        const c = document.getElementById("q" + i);
+        c.querySelectorAll("input,button").forEach((x) => (x.disabled = true));
+      }
+      function ans(q) {
+        return q.b ? q.s : String.fromCharCode(65 + q.a) + ". " + q.o[q.a];
+      }
+      function fb(i, ok, msg) {
+        const f = document.getElementById("f" + i);
+        f.className = "f " + (ok ? "ok" : "no");
+        f.innerHTML = "";
+        f.appendChild(el("b", "", msg));
+        f.appendChild(el("span", "", Q[i].e));
+        document.getElementById("q" + i).classList.add(ok ? "ok" : "no");
+      }
+      function chk(i) {
+        if (R[i] !== undefined) return;
+        const q = Q[i],
+          c = document.getElementById("q" + i);
+        let ok;
+        if (q.b) {
+          const ins = [...c.querySelectorAll("input[type=text]")];
+          if (ins.every((x) => !x.value.trim())) return;
+          ok = true;
+          ins.forEach((x, k) => {
+            const g = q.b[k].includes(norm(x.value));
+            x.classList.add(g ? "ok" : "no");
+            if (!g) ok = false;
+          });
+        } else {
+          const s = c.querySelector("input[type=radio]:checked");
+          if (!s) return;
+          ok = +s.value === q.a;
+          c.querySelectorAll("label.o").forEach((l, k) => {
+            if (k === q.a) l.classList.add("ok");
+            else if (l.firstChild.checked) l.classList.add("no");
+          });
+        }
+        R[i] = ok;
+        lock(i);
+        fb(i, ok, ok ? "Correct!" : "Not quite. Answer: " + ans(q));
+        upd();
+      }
+      function rev(i) {
+        if (R[i] !== undefined) return;
+        const q = Q[i],
+          c = document.getElementById("q" + i);
+        R[i] = false;
+        if (q.o) c.querySelectorAll("label.o")[q.a].classList.add("ok");
+        lock(i);
+        fb(i, false, "Answer: " + ans(q));
+        upd();
+      }
+      function upd() {
+        const d = R.filter((x) => x !== undefined).length,
+          s = R.filter((x) => x === true).length;
+        document.getElementById("pb").style.width = (d / Q.length) * 100 + "%";
+        document.getElementById("a").textContent =
+          "Answered " + d + "/" + Q.length;
+        document.getElementById("s").textContent = "Score " + s;
+        if (d === Q.length) {
+          const r = document.getElementById("res");
+          r.style.display = "block";
+          document.getElementById("rt").textContent =
+            s +
+            " / " +
+            Q.length +
+            " (" +
+            Math.round((s / Q.length) * 100) +
+            "%)";
+          document.getElementById("rm").textContent =
+            s >= 23
+              ? "Exam ready!"
+              : s >= 18
+                ? "Solid. Review the ones you missed."
+                : s >= 13
+                  ? "Getting there. Re-read the guide, then retry."
+                  : "Keep studying: focus on artisan commands and relationships.";
+          r.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+      init();
+    </script>
+  </body>
+</html>
